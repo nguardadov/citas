@@ -1,11 +1,3 @@
-'use strict';
-
-Tinytest.add('Scrollbar integration', function (test) {
-
-    var div = document.createElement('div');
-    div.className = 'scrollbar-inner';
-    div.value = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in.";
-    var scrollBar = jQuery('.scrollbar-inner').scrollbar();
-    console.log(scrollBar);
-    test.isNotNull(scrollBar, 'instantiation OK');
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:0cf4422d8e868dbb86dd797eedfffa96dc9d6ceedec13fa205c518764d14491e
+size 395

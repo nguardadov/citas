@@ -1,17 +1,3 @@
-const fs = require('fs');
-const pkg = require('./package.json');
-const filename = 'anchor.min.js';
-const script = fs.readFileSync(filename);
-const padStart = str => ('0' + str).slice(-2)
-const dateObj = new Date;
-const date = `${dateObj.getFullYear()}-${padStart(dateObj.getMonth() + 1)}-${padStart(dateObj.getDate())}`;
-const banner = `/**
- * AnchorJS - v${pkg.version} - ${date}
- * ${pkg.homepage}
- * Copyright (c) ${dateObj.getFullYear()} Bryan Braun; Licensed ${pkg.license}
- */
-`;
-
-if (script.slice(0, 3) != '/**') {
-  fs.writeFileSync(filename, banner + script);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:7490a1058afcc76b2fac47085e592139024424586875947111bd20b6ac479dac
+size 571

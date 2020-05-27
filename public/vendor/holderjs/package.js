@@ -1,12 +1,3 @@
-Package.describe({
-    summary: 'Holder uses SVG to render image placeholders entirely in browser.',
-    version: '2.9.4',
-    name: 'imsky:holder',
-    git: 'https://github.com/imsky/holder',
-});
-
-Package.onUse(function(api) {
-    api.versionsFrom('0.9.0');
-    api.export('Holder', 'client');
-    api.addFiles('holder.js', 'client');
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:802ffb7cd08d1446a3d17c69b85a541f8c296cbfc557e3fea0fe495221d5a700
+size 340

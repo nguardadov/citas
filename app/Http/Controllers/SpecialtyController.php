@@ -30,30 +30,41 @@ class SpecialtyController extends Controller
 
     public function store(Request $request)
     {
-
-        $rules = [
-            "name" => "required|min:3"
-        ];
-
-        $messages = [
-            "name.required" => "Es necesario ingresar un nombre.",
-            "name.min" => "Como mínimo el nombre debe tener 3 caracteres."
-        ];
-
-        $this->validate($request,$rules,$messages);
-
+        $this->performValidation($request);
         $specialty = new Specialty();
         $specialty->name = $request->name;
         $specialty->description = $request->description;
         $specialty->save();
-
-        return redirect("/specialties");
+        $notification = "Se creo la especialidad correctamente";
+        return redirect("/specialties")->with(compact('notification'));
 
     }
 
     public function update(Request $request,Specialty $specialty)
     {
 
+        $this->performValidation($request);
+
+        $specialty->name = $request->name;
+        $specialty->description = $request->description;
+        $specialty->save();
+
+        $notification = "Se actualizo la especialidad correctamente";
+        return redirect("/specialties")->with(compact("notification"));
+
+    }
+
+    public function destroy(Specialty $specialty)
+    {
+        //dd($specialty);
+        $deleted = $specialty->name;
+        $specialty->delete();
+        $notification = "Se eliminino la especialidad '".$deleted."' de manera correcta";
+        return redirect("/specialties")->with(compact("notification"));
+    }
+
+
+    protected function performValidation(Request $request){
         $rules = [
             "name" => "required|min:3"
         ];
@@ -64,19 +75,5 @@ class SpecialtyController extends Controller
         ];
 
         $this->validate($request,$rules,$messages);
-
-        $specialty->name = $request->name;
-        $specialty->description = $request->description;
-        $specialty->save();
-
-        return redirect("/specialties");
-
-    }
-
-    public function destroy(Specialty $specialty)
-    {
-        //dd($specialty);
-        $specialty->delete();
-        return redirect("/specialties");
     }
 }

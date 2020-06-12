@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Doctor;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\WorkDay;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,17 @@ class ScheduleController extends Controller
     public function edit(){
         $days = ["Lunes","Martes","Miércoles",
                  "Jueves","Viernes","Sábado","Domingo"];
-        return view('schedule',compact("days"));
+
+        $scheludes = WorkDay::where('user_id',"=",auth()->user()->id)->get();
+        $workDays = $scheludes->map(function($workDay){
+            $workDay->moring_start = (new Carbon($workDay->moring_start))->format('g:i A');
+            $workDay->moring_end = (new Carbon($workDay->moring_end))->format('g:i A');
+            $workDay->afternoon_start = (new Carbon($workDay->afternoon_start))->format('g:i A');
+            $workDay->afternoon_end = (new Carbon($workDay->afternoon_end))->format('g:i A');
+            return $workDay;
+        });
+       // dd($workDays->toArray());
+        return view('schedule',compact("days","workDays"));
     }
 
     public function store(Request $request){

@@ -18,6 +18,6 @@ class DoctorMiddleware
         if(auth()->user()->role=="doctor"){
             return $next($request);
         }
-        return redirect('\home');
+        return redirect('home');
     }
 }

@@ -45,4 +45,6 @@ use Illuminate\Support\Facades\Route;
        
     });
 
+    Route::get('/appointments/create', 'AppointmentController@create');
+    Route::post('/appointments', 'AppointmentController@store');
 

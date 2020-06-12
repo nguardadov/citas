@@ -1,21 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
 
-class DoctorController extends Controller
+class PatientController extends Controller
 {
-    /**
+     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $doctors = User::doctors()->get();
-        return view("doctors.index",compact("doctors"));
+        $patients = User::patients()->paginate(10);
+        return view("patients.index",compact("patients"));
     }
 
     /**
@@ -25,7 +26,7 @@ class DoctorController extends Controller
      */
     public function create()
     {
-        return view("doctors.create");
+        return view("patients.create");
     }
 
     /**
@@ -46,17 +47,25 @@ class DoctorController extends Controller
 
         $this->validate($request,$rules);
 
-        $doctor = new User();
-        $doctor->name = $request->input("name");
-        $doctor->email = $request->input("email");
-        $doctor->dni = $request->input("dni");
-        $doctor->address = $request->input("address");
-        $doctor->phone = $request->input("phone");
-        $doctor->role = "doctor";
-        $doctor->password = bcrypt($request->input('password'));
-        $doctor->save();
-        $notification = "El médico se ha registrado correctamente.";
-        return redirect('/doctors')->with(compact("notification"));
+        $rules = [
+            'name'=>"required|min:3",
+            "email"=>"required|email",
+            "dni"=>"required|digits:8",
+            "address"=>"nullable|min:5",
+            "phone"=>"nullable|min:6"
+        ];
+
+        $this->validate($request,$rules);
+
+        $patient = new User();
+        //saque los campos que agregare
+        $data = $request->only('name','email','dni','address','phone');
+        $data["password"] = bcrypt($request->input("password"));
+        $data["role"]='patient';
+        $patient->fill($data);
+        $patient->save();
+        $notification = "El paciente se creo correctamente.";
+        return redirect('/patients')->with(compact("notification"));
     }
 
     /**
@@ -78,8 +87,8 @@ class DoctorController extends Controller
      */
     public function edit($id)
     {
-        $doctor = User::doctors()->findOrFail($id);
-        return view("doctors.edit",compact("doctor"));
+        $patient = User::patients()->findOrFail($id);
+        return view("patients.edit",compact("patient"));
     }
 
     /**
@@ -101,22 +110,18 @@ class DoctorController extends Controller
 
         $this->validate($request,$rules);
 
+        $patient = User::patients()->findOrFail($id);
+        //saque los campos que agregare
+        $data = $request->only('name','email','dni','address','phone');
         $password = $request->input("password");
-        $doctor = User::findOrFail($id);
-        $doctor->name = $request->input("name");
-        $doctor->email = $request->input("email");
-        $doctor->dni = $request->input("dni");
-        $doctor->address = $request->input("address");
-        $doctor->phone = $request->input("phone");
-        $doctor->role = "doctor";
+
         if($password){
-            $doctor->password = bcrypt($request->input('password'));
+            $data["password"] = bcrypt($password);
         }
-   
-        $doctor->save();
-        $notification = "El médico se ha actualizo correctamente.";
-        return redirect('/doctors')->with(compact("notification"));   
-        
+        $patient->fill($data);
+        $patient->save();
+        $notification = "El paciente se ha actualizo correctamente.";
+        return redirect('/patients')->with(compact("notification"));   
     }
 
     /**
@@ -125,11 +130,11 @@ class DoctorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $doctor)
+    public function destroy(User $patient)
     {
-        $doctorName= $doctor->name;
-        $notification = "El médico $doctorName se eliminado correctamente.";
-        $doctor->delete();
-        return redirect('/doctors')->with(compact("notification"));  
+        $patientName= $patient->name;
+        $notification = "El paciente $patientName se eliminado correctamente.";
+        $patient->delete();
+        return redirect('/patients')->with(compact("notification"));  
     }
 }

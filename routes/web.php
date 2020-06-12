@@ -13,24 +13,36 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
-});
+    Route::get('/', function () {
+        return view('auth.login');
+    });
 
-Auth::routes();
+    Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/specialties', 'SpecialtyController@index');
-Route::get('/specialties/create', 'SpecialtyController@create');
-Route::get('/specialties/{specialty}/edit', 'SpecialtyController@edit');
+    route::middleware(["auth","admin"])->namespace('Admin')->group(function(){
+        //specialty
+        Route::get('/specialties', 'SpecialtyController@index');
+        Route::get('/specialties/create', 'SpecialtyController@create');
+        Route::get('/specialties/{specialty}/edit', 'SpecialtyController@edit');
 
-Route::post('/specialties', 'SpecialtyController@store');
-Route::put('/specialties/{specialty}', 'SpecialtyController@update');
-Route::delete('/specialties/{specialty}', 'SpecialtyController@destroy');
+        Route::post('/specialties', 'SpecialtyController@store');
+        Route::put('/specialties/{specialty}', 'SpecialtyController@update');
+        Route::delete('/specialties/{specialty}', 'SpecialtyController@destroy');
 
-//doctors
-Route::resource('doctors', 'DoctorController');
+        //doctors
+        Route::resource('doctors', 'DoctorController');
 
-//patienrs
-Route::resource('patients', 'PatientController');
+        //patienrs
+        Route::resource('patients', 'PatientController');
+    });
+
+    route::middleware(["auth","doctor"])->namespace('Doctor')->group(function(){
+        //specialty
+        Route::get('/schedule', 'ScheduleController@edit');
+        Route::post('/schedule', 'ScheduleController@store');
+       
+    });
+
+

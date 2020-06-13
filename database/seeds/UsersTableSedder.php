@@ -16,10 +16,19 @@ class UsersTableSedder extends Seeder
             'name' => "Nelson Guardado",
             'email' => "nguardadov@gmail.com",
             'password' => bcrypt("1234"),
-            'address' => '',
-            'phone' => '',
-            'dni' => '12345678',
             'role'=>'admin'        
+        ]);
+        User::create([
+            'name' => "Doctor1",
+            'email' => "doctor@gmail.com",
+            'password' => bcrypt("HolaMundo10!"),
+            'role'=>'doctor'        
+        ]);
+        User::create([
+            'name' => "paciente1",
+            'email' => "paciente@gmail.com",
+            'password' => bcrypt("HolaMundo10!"),
+            'role'=>'patient'        
         ]);
         factory(User::class, 50)->create();
     }

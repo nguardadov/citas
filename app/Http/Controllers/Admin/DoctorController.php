@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Specialty;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -26,7 +27,8 @@ class DoctorController extends Controller
      */
     public function create()
     {
-        return view("doctors.create");
+        $specialites = Specialty::all();
+        return view("doctors.create",compact('specialites'));
     }
 
     /**
@@ -37,10 +39,11 @@ class DoctorController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request->toArray());
         $rules = [
             'name'=>"required|min:3",
             "email"=>"required|email",
-            "dni"=>"required|digits:8",
+            "dni"=>"nullable|digits:8",
             "address"=>"nullable|min:5",
             "phone"=>"nullable|min:6"
         ];
@@ -56,6 +59,7 @@ class DoctorController extends Controller
         $doctor->role = "doctor";
         $doctor->password = bcrypt($request->input('password'));
         $doctor->save();
+        $doctor->specialites()->attach($request->input('specialties'));
         $notification = "El médico se ha registrado correctamente.";
         return redirect('/doctors')->with(compact("notification"));
     }
@@ -79,8 +83,12 @@ class DoctorController extends Controller
      */
     public function edit($id)
     {
+
         $doctor = User::doctors()->findOrFail($id);
-        return view("doctors.edit",compact("doctor"));
+        $specialites = Specialty::all();
+        $speciality_ids = $doctor->specialties()->pluck("specialties.id");
+       // dd( $speciality_ids );
+        return view("doctors.edit",compact("doctor","specialites","speciality_ids"));
     }
 
     /**
@@ -95,7 +103,7 @@ class DoctorController extends Controller
         $rules = [
             'name'=>"required|min:3",
             "email"=>"required|email",
-            "dni"=>"required|digits:8",
+            "dni"=>"nullable|digits:8",
             "address"=>"nullable|min:5",
             "phone"=>"nullable|min:6"
         ];
@@ -114,7 +122,8 @@ class DoctorController extends Controller
             $doctor->password = bcrypt($request->input('password'));
         }
    
-        $doctor->save();
+        $doctor->save(); //specialites
+        $doctor->specialties()->sync($request->input("specialties"));
         $notification = "El médico se ha actualizo correctamente.";
         return redirect('/doctors')->with(compact("notification"));   
         

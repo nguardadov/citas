@@ -28,7 +28,7 @@
             @csrf
             <div class="form-group">
                 <label for="">Especialidad</label>
-                <select class="form-control" name="specialty">
+                <select class="form-control" name="specialty" id="specialties">
                     <option value="" disabled selected>--Seleccione una opcion---</option>
                     @foreach ($spcialties as $spcialtie)
                         <option value="{{$spcialtie->id}}">
@@ -39,14 +39,19 @@
             </div>
             <div class="form-group">
                 <label for="">Médico</label>
-                <select class="form-control" name="doctor"></select>
+                <select class="form-control" name="doctor" id="doctor"></select>
             </div>
             <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                     </div>
-                    <input class="form-control datepicker" placeholder="Seleccione una fecha" type="text" value="">
+                    <input class="form-control datepicker" 
+                        value="{{date('Y-m-d')}}"
+                        data-date-format="yyyy-mm-dd"
+                        data-date-start-date="{{date('Y-m-d')}}"
+                        data-data-end-date="+30d"
+                        placeholder="Seleccione una fecha" type="text">
                 </div>
             </div>
             <div class="form-group">
@@ -66,4 +71,25 @@
 
 @section('scripts')
 <script src="{{asset('vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
+<script>
+    let $doctor;
+    $(function(){
+        const $specialty = $("#specialties");
+        $doctor = $("#doctor")
+        $specialty.change(()=>{
+            const specialtyId = $specialty.val()
+            const url = `/specialties/${specialtyId}/doctors`;
+            $.getJSON(url,onDoctorsLoaded);
+        });
+    });
+
+    function onDoctorsLoaded(doctors){
+        //alert("hola");
+        let htmlOptions = '';
+        doctors.forEach(doctor => {
+            htmlOptions += `<option value="${doctor.id}">${doctor.name}</option>`;
+        });
+        $doctor.html(htmlOptions);
+    }
+</script>
 @endsection

@@ -50,6 +50,7 @@ use Illuminate\Support\Facades\Route;
         Route::post('/appointments', 'AppointmentController@store');
 
         Route::get('/specialties/{specialty}/doctors','Api\SpecialtyController@doctors');
+        Route::get('/schedule/hours','Api\ScheduleController@hours');
     });
 
 

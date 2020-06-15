@@ -15,13 +15,21 @@ class ScheduleController extends Controller
                  "Jueves","Viernes","Sábado","Domingo"];
 
         $scheludes = WorkDay::where('user_id',"=",auth()->user()->id)->get();
-        $workDays = $scheludes->map(function($workDay){
-            $workDay->moring_start = (new Carbon($workDay->moring_start))->format('g:i A');
-            $workDay->moring_end = (new Carbon($workDay->moring_end))->format('g:i A');
-            $workDay->afternoon_start = (new Carbon($workDay->afternoon_start))->format('g:i A');
-            $workDay->afternoon_end = (new Carbon($workDay->afternoon_end))->format('g:i A');
-            return $workDay;
-        });
+        if(count($scheludes) > 0){
+            $workDays = $scheludes->map(function($workDay){
+                $workDay->moring_start = (new Carbon($workDay->moring_start))->format('g:i A');
+                $workDay->moring_end = (new Carbon($workDay->moring_end))->format('g:i A');
+                $workDay->afternoon_start = (new Carbon($workDay->afternoon_start))->format('g:i A');
+                $workDay->afternoon_end = (new Carbon($workDay->afternoon_end))->format('g:i A');
+                return $workDay;
+            });
+        }else{
+            $workDays = collect();
+            for ($i=0; $i <7 ; $i++) { 
+                $workDays->push(new WorkDay());
+            }
+        }
+      
        // dd($workDays->toArray());
         return view('schedule',compact("days","workDays"));
     }

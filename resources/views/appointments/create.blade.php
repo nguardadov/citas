@@ -47,6 +47,8 @@
                         <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                     </div>
                     <input class="form-control datepicker" 
+                        id="date",
+                        name="date"
                         value="{{date('Y-m-d')}}"
                         data-date-format="yyyy-mm-dd"
                         data-date-start-date="{{date('Y-m-d')}}"
@@ -56,7 +58,7 @@
             </div>
             <div class="form-group">
                 <label for="">Hora de atención</label>
-                <input type="text" class="form-control" placeholder="direccion" name="address" value="{{old('address')}}" >
+                <div id="hours"></div>
             </div>
             <div class="form-group">
                 <label for="">T&eacute;lefono</label>
@@ -71,25 +73,5 @@
 
 @section('scripts')
 <script src="{{asset('vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
-<script>
-    let $doctor;
-    $(function(){
-        const $specialty = $("#specialties");
-        $doctor = $("#doctor")
-        $specialty.change(()=>{
-            const specialtyId = $specialty.val()
-            const url = `/specialties/${specialtyId}/doctors`;
-            $.getJSON(url,onDoctorsLoaded);
-        });
-    });
-
-    function onDoctorsLoaded(doctors){
-        //alert("hola");
-        let htmlOptions = '';
-        doctors.forEach(doctor => {
-            htmlOptions += `<option value="${doctor.id}">${doctor.name}</option>`;
-        });
-        $doctor.html(htmlOptions);
-    }
-</script>
+<script src="{{asset('js/appointments/create.js')}}"></script>
 @endsection

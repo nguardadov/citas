@@ -30,6 +30,6 @@ class UsersTableSedder extends Seeder
             'password' => bcrypt("HolaMundo10!"),
             'role'=>'patient'        
         ]);
-        factory(User::class, 50)->create();
+        factory(User::class, 50)->state('patient')->create();
     }
 }

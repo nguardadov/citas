@@ -13,8 +13,19 @@ class CreateAppintmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('appintments', function (Blueprint $table) {
+        Schema::create('appointments', function (Blueprint $table) {
             $table->id();
+            $table->string('description');
+            $table->unsignedBigInteger('specialty_id');
+            $table->unsignedBigInteger('doctor_id');
+            $table->unsignedBigInteger('patient_id');
+            $table->date('scheduled_date');
+            $table->time('scheduled_time');
+            $table->string('type');
+            //foreign key
+            $table->foreign('specialty_id')->references('id')->on('specialties');
+            $table->foreign('doctor_id')->references('id')->on('users');
+            $table->foreign('patient_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

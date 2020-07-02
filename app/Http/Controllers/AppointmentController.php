@@ -12,6 +12,15 @@ use Illuminate\Support\Facades\Validator;
 
 class AppointmentController extends Controller
 {
+
+    public function index(){
+        $appointments = Appointment::orderBy('scheduled_date','ASC')
+        ->orderBy('scheduled_time','ASC')
+        ->paginate(10);
+
+        return view('appointments.index',compact('appointments'));
+    }
+
     public function create(ScheduleServices $scheduleServices){
         $specialties = Specialty::all();
         $specialtyId = old('specialty_id'); 
@@ -100,4 +109,6 @@ class AppointmentController extends Controller
 
         return back()->with(compact('notification'));
     }
+
+   
 }

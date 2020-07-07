@@ -59,7 +59,7 @@ class DoctorController extends Controller
         $doctor->role = "doctor";
         $doctor->password = bcrypt($request->input('password'));
         $doctor->save();
-        $doctor->specialites()->attach($request->input('specialties'));
+        $doctor->specialties()->attach($request->input('specialties'));
         $notification = "El médico se ha registrado correctamente.";
         return redirect('/doctors')->with(compact("notification"));
     }
